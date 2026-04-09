@@ -27,7 +27,7 @@ model = SimpleModel().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.01)
 
-# 🔁 CHANGE THIS TO TEST DIFFERENT SCHEDULERS
+#  CHANGE THIS TO TEST DIFFERENT SCHEDULERS
 scheduler_type = "step"  # options: step, plateau, cosine
 
 
@@ -41,6 +41,18 @@ if scheduler_type == "step":
         gamma=0.5      # halve LR
     )
 
+# -----------------------------
+# StepLR
+# -----------------------------
+# lr_t = lr_0 * (gamma ** floor(epoch / step_size))
+# where:
+# lr_0       = initial learning rate
+# gamma      = decay factor (e.g., 0.5)
+# step_size  = number of epochs before decay
+# epoch      = current epoch index
+
+
+
 elif scheduler_type == "plateau":
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
         optimizer,
@@ -48,6 +60,19 @@ elif scheduler_type == "plateau":
         factor=0.5,
         patience=2
     )
+
+# -----------------------------
+# ReduceLROnPlateau
+# -----------------------------
+# if no improvement in monitored metric for 'patience' epochs:
+#     lr_new = lr * factor
+#
+# where:
+# factor   = multiplicative decay (e.g., 0.5)
+# patience = number of epochs to wait before reducing LR
+# mode='min' means we expect:
+#     new_loss < best_loss  --> improvement
+
 
 elif scheduler_type == "cosine":
     scheduler = optim.lr_scheduler.CosineAnnealingLR(
@@ -59,6 +84,16 @@ elif scheduler_type == "cosine":
 else:
     scheduler = None
 
+# -----------------------------
+# CosineAnnealingLR
+# -----------------------------
+# lr_t = eta_min + 0.5 * (lr_0 - eta_min) * (1 + cos(pi * epoch / T_max))
+#
+# where:
+# lr_0    = initial learning rate
+# eta_min = minimum learning rate
+# T_max   = total number of epochs for one cosine cycle
+# epoch   = current epoch
 
 # -----------------------------
 # Dummy Data
