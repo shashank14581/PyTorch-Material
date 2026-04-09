@@ -101,7 +101,7 @@ def build_model(trial):
     # Replace classifier
     model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
 
-    # 🔥 Freeze strategy
+    # Freeze strategy
     freeze_ratio = trial.suggest_float("freeze_ratio", 0.5, 1.0)
 
     total_layers = list(model.parameters())
@@ -178,7 +178,7 @@ def objective(trial):
         train_loss = train(model, train_loader, optimizer, criterion)
         val_loss = validate(model, val_loader, criterion)
 
-        # 🔥 Pruning signal
+        # Pruning signal
         trial.report(val_loss, epoch)
 
         if trial.should_prune():
